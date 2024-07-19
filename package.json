@@ -1,20 +1,25 @@
 {
-  "name": "aipplicator",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
-  },
-  "dependencies": {
-    "@nuxtjs/tailwindcss": "^6.12.1",
-    "nuxt": "^3.12.3",
-    "vue": "latest"
-  },
-  "devDependencies": {
-    "daisyui": "^4.12.10"
-  }
+    "name": "aipplicator",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "nuxt build",
+        "dev": "nuxt dev",
+        "generate": "nuxt generate",
+        "preview": "nuxt preview",
+        "postinstall": "nuxt prepare"
+    },
+    "dependencies": {
+        "@nuxtjs/tailwindcss": "^6.12.1",
+        "nuxt": "^3.12.3",
+        "pinia": "^2.1.7",
+        "vue": "latest"
+    },
+    "devDependencies": {
+        "@pinia/nuxt": "^0.5.1",
+        "daisyui": "^4.12.10"
+    },
+    "overrides": {
+        "vue": "latest"
+    }
 }

@@ -44,7 +44,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { EducationItem } from './EducationTimeline.types';
 
 const emit = defineEmits<{
     createEducationEntry: [item: EducationItem]

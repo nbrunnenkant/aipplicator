@@ -19,7 +19,6 @@
 </template>
 
 <script setup lang="ts">
-import type { EducationItem } from './EducationTimeline.types';
 
 defineProps<{ items: EducationItem[] }>()
 </script>
