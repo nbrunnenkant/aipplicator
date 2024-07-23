@@ -9,8 +9,8 @@
                 <time class="font-mono italic"> {{ item.start.getFullYear() }} - {{ item.end.getFullYear() }}</time>
                 <div class="font-bold text-3xl">{{ item.name }}</div>
                 <div class="flex justify-between mt-2">
-                    <span>{{ item.degree }}</span>
-                    <span v-if="item.finalMark" class="badge badge-secondary"> Note: {{ item.finalMark }} </span>
+                    <span class="mr-1">{{ item.degree }}</span>
+                    <span v-if="item.finalMark" class="badge badge-secondary"> {{ item.finalMark }} </span>
                 </div>
             </div>
             <hr v-if="index !== items.length - 1" />
@@ -19,6 +19,5 @@
 </template>
 
 <script setup lang="ts">
-
 defineProps<{ items: EducationItem[] }>()
 </script>

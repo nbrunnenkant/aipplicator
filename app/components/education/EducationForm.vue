@@ -45,10 +45,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-const emit = defineEmits<{
-    createEducationEntry: [item: EducationItem]
-}>()
-
 const nameInput = ref('')
 const startInput = ref('')
 const endInput = ref('')
@@ -56,11 +52,12 @@ const degreeInput = ref('')
 const finalMarkInput = ref('')
 const includeMark = ref(false)
 
+const { addEducationItem } = useCvStore()
 
 const handleSubmit = (e: Event) => {
     e.preventDefault()
 
-    emit('createEducationEntry', {
+    addEducationItem({
         name: nameInput.value,
         start: new Date(startInput.value),
         end: new Date(endInput.value),
