@@ -7,10 +7,6 @@
 </template>
 
 <style lang="css">
-body {
-    font-family: CommitMono;
-}
-
 @font-face {
     font-family: "CommitMono";
     src:

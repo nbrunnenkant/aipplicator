@@ -10,7 +10,13 @@ export default defineNuxtConfig({
     modules: ["@nuxtjs/tailwindcss", '@pinia/nuxt'],
     tailwindcss: {
         config: {
-            plugins: [require('daisyui')]
+            plugins: [require('daisyui')],
+            theme: {
+                fontFamily: {
+                    sans: ['"CommitMono"'],
+                    mono: ['"CommitMono"'],
+                }
+            }
         }
     }
 })
