@@ -7,7 +7,6 @@
 
 <script setup lang="ts">
 import EducationForm from '~/components/education/EducationForm.vue';
-import type { EducationItem } from '~/components/education/EducationTimeline.types';
 
 const education = ref<EducationItem[]>([])
 
