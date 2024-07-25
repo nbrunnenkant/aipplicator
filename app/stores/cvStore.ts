@@ -9,12 +9,25 @@ export type EducationItem = {
     finalMark?: string
 }
 
+export type ProjectItem = {
+    name: string,
+    description: string,
+    technologies: string[]
+    repoUrl?: URL,
+    deploymentUrl?: URL
+}
+
 export const useCvStore = defineStore("cvStore", () => {
     const education = ref<EducationItem[]>([])
+    const projects = ref<ProjectItem[]>([])
 
     function addEducationItem(item: EducationItem) {
         education.value.push(item)
     }
 
-    return { education, addEducationItem }
+    function addProjectItem(item: ProjectItem) {
+        projects.value.push(item)
+    }
+
+    return { education, projects, addEducationItem, addProjectItem }
 })
