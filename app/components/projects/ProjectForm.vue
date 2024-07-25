@@ -30,13 +30,24 @@
                 </div>
                 <form @submit="addTechnology" class="flex flex-col gap-2">
                     <div class="flex gap-4">
-                        <input v-model.trim="technologyInput" class="input input-bordered grow" />
+                        <div class="form-control grow">
+                            <label class="label-text"> Technologien </label>
+                            <input v-model.trim="technologyInput" class="input input-bordered" />
+                        </div>
                         <button type="submit" class="btn btn-primary"> + </button>
                     </div>
                     <ul class="flex gap-2">
                         <span class="badge badge-secondary" v-for="technology in technologies"> {{ technology }}</span>
                     </ul>
                 </form>
+                <div class="form-control">
+                    <label class="label-text"> Repo-URL </label>
+                    <input class="input input-bordered" v-model.trim="repoUrlInput" />
+                </div>
+                <div class="form-control">
+                    <label class="label-text"> Deployment-URL </label>
+                    <input class="input input-bordered" v-model.trim="deploymentUrlInput" />
+                </div>
                 <button @click="addProjectEntry" type="submit" class="btn btn-primary" :disabled="submitDisabled">
                     Hinzufügen
                 </button>
@@ -57,6 +68,8 @@ const reformulateOngoing = ref(false)
 const nameInput = ref('')
 const descriptionInput = ref('')
 const technologyInput = ref('')
+const repoUrlInput = ref('')
+const deploymentUrlInput = ref('')
 const technologies = ref<string[]>([])
 
 const reformulateDisabled = computed(() => descriptionInput.value.length < 30 || descriptionInput.value === descriptionSuggestion.value)
@@ -67,7 +80,13 @@ const cvStore = useCvStore()
 
 const addProjectEntry = (e: Event) => {
     e.preventDefault()
-    cvStore.addProjectItem({ name: nameInput.value, description: descriptionInput.value, technologies: technologies.value })
+    cvStore.addProjectItem({
+        name: nameInput.value,
+        description: descriptionInput.value,
+        technologies: technologies.value,
+        repoUrl: new URL(repoUrlInput.value) ?? undefined,
+        deploymentUrl: new URL(deploymentUrlInput.value) ?? undefined
+    })
     console.log(cvStore.projects)
 }
 
