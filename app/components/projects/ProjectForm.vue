@@ -8,23 +8,21 @@
                     <input v-model="nameInput" class="input input-bordered" />
                 </div>
                 <div class="flex gap-4">
-                    <div class="flex flex-col gap-2 basis-1/2">
+                    <div class="flex flex-col gap-2 grow">
                         <div class="form-control">
                             <label class="label-text">Projektbeschreibung</label>
                             <textarea v-model.trim="descriptionInput" rows="8" class="textarea textarea-bordered" />
                         </div>
-                        <button type="button" :disabled="reformulateDisabled" @click="improveDescription"
-                            class="btn">Reformulieren</button>
-                    </div>
-                    <div class="flex flex-col gap-2 border p-4 rounded-lg grow">
-                        <h4 class="font-bold"> Vorschlag </h4>
-                        <span v-if="suggestionLoading"> Loading </span>
-                        <div v-else class="flex flex-col grow">
-                            <p class="grow" v-if="reformulateOngoing"> {{ descriptionSuggestion }}</p>
-                            <p class="grow italic" v-if="!reformulateOngoing"> Hier gibt es nichts zu sehen. Gib eine
-                                Beschreibung an und drücke reformulieren. </p>
-                            <button :disabled="acceptDisabled" type="button" @click="acceptSuggestion"
-                                class="btn btn-primary self-end justify-self-end">Akzeptieren</button>
+                        <button v-if="!reformulateOngoing || suggestionLoading" type="button" :disabled="reformulateDisabled"
+                            @click="improveDescription" class="btn">
+                            <span v-if="suggestionLoading"> Loading... </span>
+                            <span v-else> Reformulieren </span>
+                        </button>
+                        <div v-if="reformulateOngoing && !suggestionLoading" class="flex col-2 gap-4">
+                            <button @click="declineSuggestion" class="btn btn-error grow" type="button"> Ablehnen
+                            </button>
+                            <button @click="acceptSuggestion" class="btn btn-success grow" type="button"> Annehmen
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -34,7 +32,7 @@
                             <label class="label-text"> Technologien </label>
                             <input v-model.trim="technologyInput" class="input input-bordered" />
                         </div>
-                        <button type="submit" class="btn btn-primary"> + </button>
+                        <button type="submit" class="btn btn-primary self-end"> + </button>
                     </div>
                     <ul class="flex gap-2">
                         <span class="badge badge-secondary" v-for="technology in technologies"> {{ technology }}</span>
@@ -61,6 +59,8 @@ import OpenAI from 'openai';
 
 const runtime = useRuntimeConfig()
 
+let descriptionTemp = ''
+
 const suggestionLoading = ref(false)
 const descriptionSuggestion = ref('')
 const reformulateOngoing = ref(false)
@@ -73,7 +73,6 @@ const deploymentUrlInput = ref('')
 const technologies = ref<string[]>([])
 
 const reformulateDisabled = computed(() => descriptionInput.value.length < 30 || descriptionInput.value === descriptionSuggestion.value)
-const acceptDisabled = computed(() => descriptionSuggestion.value === '' || descriptionInput.value === descriptionSuggestion.value)
 const submitDisabled = computed(() => nameInput.value === '' || descriptionInput.value === '')
 
 const cvStore = useCvStore()
@@ -87,7 +86,6 @@ const addProjectEntry = (e: Event) => {
         repoUrl: new URL(repoUrlInput.value) ?? undefined,
         deploymentUrl: new URL(deploymentUrlInput.value) ?? undefined
     })
-    console.log(cvStore.projects)
 }
 
 const openai = new OpenAI({
@@ -96,7 +94,11 @@ const openai = new OpenAI({
 })
 
 const acceptSuggestion = () => {
-    descriptionInput.value = descriptionSuggestion.value
+    reformulateOngoing.value = false
+}
+
+const declineSuggestion = () => {
+    descriptionInput.value = descriptionTemp
     reformulateOngoing.value = false
 }
 
@@ -112,6 +114,8 @@ const improveDescription = async () => {
     const { reworkedDescription } = await sendToOpenAI()
     suggestionLoading.value = false
     descriptionSuggestion.value = reworkedDescription
+    descriptionTemp = descriptionInput.value
+    descriptionInput.value = reworkedDescription
 }
 
 const sendToOpenAI = async (): Promise<{ reworkedDescription: string }> => {
