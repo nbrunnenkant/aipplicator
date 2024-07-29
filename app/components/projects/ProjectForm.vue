@@ -13,9 +13,9 @@
                             <label class="label-text">Projektbeschreibung</label>
                             <textarea v-model.trim="descriptionInput" rows="8" class="textarea textarea-bordered" />
                         </div>
-                        <button v-if="!reformulateOngoing || suggestionLoading" type="button" :disabled="reformulateDisabled"
-                            @click="improveDescription" class="btn">
-                            <span v-if="suggestionLoading"> Loading... </span>
+                        <button v-if="!reformulateOngoing || suggestionLoading" type="button"
+                            :disabled="reformulateDisabled" @click="improveDescription" class="btn">
+                            <span v-if="suggestionLoading" class="loading loading-dots"> </span>
                             <span v-else> Reformulieren </span>
                         </button>
                         <div v-if="reformulateOngoing && !suggestionLoading" class="flex col-2 gap-4">
@@ -34,8 +34,13 @@
                         </div>
                         <button type="submit" class="btn btn-primary self-end"> + </button>
                     </div>
-                    <ul class="flex gap-2">
-                        <span class="badge badge-secondary" v-for="technology in technologies"> {{ technology }}</span>
+                    <ul class="flex gap-2 flex-wrap">
+                        <span class="badge badge-secondary h-8" v-for="(technology, index) in technologies" :key="index">
+                            <span>
+                                <button type="button" class="btn btn-secondary rounded-full btn-xs" @click="removeTechnology(index)"> x </button>
+                                {{ technology }}
+                            </span>
+                        </span>
                     </ul>
                 </form>
                 <div class="form-control">
@@ -83,8 +88,8 @@ const addProjectEntry = (e: Event) => {
         name: nameInput.value,
         description: descriptionInput.value,
         technologies: technologies.value,
-        repoUrl: new URL(repoUrlInput.value) ?? undefined,
-        deploymentUrl: new URL(deploymentUrlInput.value) ?? undefined
+        repoUrl: repoUrlInput.value !== '' ? new URL(repoUrlInput.value) : undefined,
+        deploymentUrl: deploymentUrlInput.value !== '' ? new URL(deploymentUrlInput.value) : undefined
     })
 }
 
@@ -108,6 +113,10 @@ const addTechnology = (e: Event) => {
     technologyInput.value = ''
 }
 
+const removeTechnology = (index: number) => {
+    technologies.value = technologies.value.filter((_, idx) => idx !== index)
+}
+
 const improveDescription = async () => {
     suggestionLoading.value = true
     reformulateOngoing.value = true
@@ -128,7 +137,6 @@ const sendToOpenAI = async (): Promise<{ reworkedDescription: string }> => {
         model: "gpt-4o-mini",
     });
 
-    console.log(completion)
     const description = JSON.parse(completion.choices[0]?.message.content ?? "")
     return { ...description }
 }
