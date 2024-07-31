@@ -6,8 +6,5 @@
 </template>
 
 <script setup lang="ts">
-import ProjectForm from '~/components/projects/ProjectForm.vue';
-import ProjectList from '~/components/projects/ProjectList.vue';
-
 const { projects } = storeToRefs(useCvStore())
 </script>

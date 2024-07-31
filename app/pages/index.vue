@@ -6,8 +6,6 @@
 </template>
 
 <script setup lang="ts">
-import EducationForm from '~/components/education/EducationForm.vue';
-
 const { education } = storeToRefs(useCvStore())
 
 const timeline = computed(() => {
